@@ -31,6 +31,30 @@ function cp-kafka-stop {
 }
 
 # ===========================
+# Git Aliases
+# ===========================
+
+# Set local git config
+function gsetlocal {
+    Write-Host "Setting local Git config..." -ForegroundColor Green
+    git config user.name "Ashish Patel"
+    git config user.email "ashi.patel546@gmail.com"
+    Write-Host "Local Git config set:" -ForegroundColor Cyan
+    Write-Host "  User: Ashish Patel" -ForegroundColor White
+    Write-Host "  Email: ashi.patel546@gmail.com" -ForegroundColor White
+}
+
+# Set global git config
+function gsetglobal {
+    Write-Host "Setting global Git config..." -ForegroundColor Green
+    git config --global user.name "Ashish Kumar"
+    git config --global user.email "ashish.kumar3@vml.com"
+    Write-Host "Global Git config set:" -ForegroundColor Cyan
+    Write-Host "  User: Ashish Kumar" -ForegroundColor White
+    Write-Host "  Email: ashish.kumar3@vml.com" -ForegroundColor White
+}
+
+# ===========================
 # Redis Aliases
 # ===========================
 
@@ -41,10 +65,36 @@ function redis-server {
     Write-Host "Redis server started and exposed on port 6379" -ForegroundColor Cyan
 }
 
+# Stop Redis server
+function redis-stop {
+    # Check if Redis container exists
+    $containerStatus = docker ps -a --filter "name=redis-local" --format "{{.Names}}"
+    
+    if ($containerStatus -eq "redis-local") {
+        Write-Host "Stopping Redis server..." -ForegroundColor Yellow
+        docker stop redis-local
+        docker rm redis-local
+        Write-Host "Redis server stopped and removed." -ForegroundColor Green
+    }
+    else {
+        Write-Host "Error: Redis server is not running!" -ForegroundColor Red
+        Write-Host "Redis container does not exist." -ForegroundColor Yellow
+    }
+}
+
 # Access Redis CLI
 function redis-cli {
-    Write-Host "Connecting to Redis CLI..." -ForegroundColor Green
-    docker exec -it redis-local redis-cli
+    # Check if Redis container is running
+    $containerStatus = docker ps --filter "name=redis-local" --format "{{.Names}}"
+    
+    if ($containerStatus -eq "redis-local") {
+        Write-Host "Connecting to Redis CLI..." -ForegroundColor Green
+        docker exec -it redis-local redis-cli
+    }
+    else {
+        Write-Host "Error: Redis server is not running!" -ForegroundColor Red
+        Write-Host "Please start Redis server first using 'redis-server' command." -ForegroundColor Yellow
+    }
 }
 
 # ===========================
@@ -69,7 +119,10 @@ function aliases {
     Write-Host "  grep           : Alias for Select-String" -ForegroundColor White
     Write-Host "  cp-kafka-start : Start Kafka server" -ForegroundColor White
     Write-Host "  cp-kafka-stop  : Stop Kafka server" -ForegroundColor White
+    Write-Host "  gsetlocal      : Set local Git config (Ashish Patel)" -ForegroundColor White
+    Write-Host "  gsetglobal     : Set global Git config (Ashish Kumar)" -ForegroundColor White
     Write-Host "  redis-server   : Start Redis server (port 6379)" -ForegroundColor White
+    Write-Host "  redis-stop     : Stop Redis server" -ForegroundColor White
     Write-Host "  redis-cli      : Access Redis CLI" -ForegroundColor White
     Write-Host "  refresh        : Reload PowerShell profile" -ForegroundColor White
     Write-Host "  aliases        : Show this list of custom aliases" -ForegroundColor White
@@ -92,7 +145,10 @@ Write-Host "Available custom aliases:" -ForegroundColor Cyan
 Write-Host "  - grep           : Alias for Select-String" -ForegroundColor White
 Write-Host "  - cp-kafka-start : Start Kafka server" -ForegroundColor White
 Write-Host "  - cp-kafka-stop  : Stop Kafka server" -ForegroundColor White
+Write-Host "  - gsetlocal      : Set local Git config (Ashish Patel)" -ForegroundColor White
+Write-Host "  - gsetglobal     : Set global Git config (Ashish Kumar)" -ForegroundColor White
 Write-Host "  - redis-server   : Start Redis server (port 6379)" -ForegroundColor White
+Write-Host "  - redis-stop     : Stop Redis server" -ForegroundColor White
 Write-Host "  - redis-cli      : Access Redis CLI" -ForegroundColor White
 Write-Host "  - refresh        : Reload PowerShell profile" -ForegroundColor White
 Write-Host ""

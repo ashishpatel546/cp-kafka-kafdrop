@@ -55,9 +55,17 @@ Create/update the PowerShell profile at: `$PROFILE` (typically at `C:\Users\<use
   - Image: `redis:latest`
   - Should run in detached mode
 
+- **redis-stop**: Stop Redis server
+
+  - Check if Redis container exists before stopping
+  - If container doesn't exist, display error message
+  - If exists, stop and remove the `redis-local` container
+  - Display confirmation message
+
 - **redis-cli**: Access Redis CLI
-  - Connect to the `redis-local` container
-  - Open interactive Redis CLI session
+  - Check if Redis server is running first
+  - If not running, display error message with instructions
+  - If running, connect to the `redis-local` container and open interactive Redis CLI session
 
 ### 5. Profile Management
 
@@ -107,7 +115,7 @@ Display on profile load:
 After setup, verify:
 
 1. Profile loads without errors: `. $PROFILE`
-2. All commands are registered: `Get-Command cp-kafka-start, cp-kafka-stop, gsetlocal, gsetglobal, redis-server, redis-cli, refresh, grep, aliases, open-zsh`
+2. All commands are registered: `Get-Command cp-kafka-start, cp-kafka-stop, gsetlocal, gsetglobal, redis-server, redis-stop, redis-cli, refresh, grep, aliases, open-zsh`
 3. `refresh` command works to reload profile
 4. `aliases` displays all custom commands
 5. `open-zsh` opens profile in VS Code
