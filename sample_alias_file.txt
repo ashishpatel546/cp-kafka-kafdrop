@@ -1,0 +1,98 @@
+# PowerShell Profile for Windows
+# This profile works with VS Code terminal, PowerShell terminal, and Command Prompt (if PowerShell is used)
+
+# ===========================
+# Utility Aliases
+# ===========================
+
+# Alias for grep functionality using Select-String
+Set-Alias -Name grep -Value Select-String
+
+
+# ===========================
+# Kafka Aliases
+# ===========================
+
+# Start Kafka server using Docker Compose
+function cp-kafka-start {
+    $dockerComposePath = "d:\Ashish\Repos\cp-kafka-kafdrop"
+    Write-Host "Starting Kafka server..." -ForegroundColor Green
+    docker-compose -f "$dockerComposePath\docker-compose.yml" up -d
+    Write-Host "Kafka server started. Access Kafdrop UI at http://localhost:9000" -ForegroundColor Cyan
+    Write-Host "Control Center UI at http://localhost:9021" -ForegroundColor Cyan
+}
+
+# Stop Kafka server
+function cp-kafka-stop {
+    $dockerComposePath = "d:\Ashish\Repos\cp-kafka-kafdrop"
+    Write-Host "Stopping Kafka server..." -ForegroundColor Yellow
+    docker-compose -f "$dockerComposePath\docker-compose.yml" down
+    Write-Host "Kafka server stopped." -ForegroundColor Green
+}
+
+# ===========================
+# Redis Aliases
+# ===========================
+
+# Start Redis server using Docker
+function redis-server {
+    Write-Host "Starting Redis server on port 6379..." -ForegroundColor Green
+    docker run -d --name redis-local -p 6379:6379 redis:latest
+    Write-Host "Redis server started and exposed on port 6379" -ForegroundColor Cyan
+}
+
+# Access Redis CLI
+function redis-cli {
+    Write-Host "Connecting to Redis CLI..." -ForegroundColor Green
+    docker exec -it redis-local redis-cli
+}
+
+# ===========================
+# Refresh Function
+# ===========================
+
+# Refresh the PowerShell profile to load new aliases
+function refresh {
+    Write-Host "Refreshing PowerShell profile..." -ForegroundColor Yellow
+    . $PROFILE
+    Write-Host "Profile refreshed! All aliases are now available." -ForegroundColor Green
+}
+
+# ===========================
+# Profile Management
+# ===========================
+
+# Show all available custom aliases and functions
+function aliases {
+    Write-Host "`nAvailable custom aliases and functions:" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "  grep           : Alias for Select-String" -ForegroundColor White
+    Write-Host "  cp-kafka-start : Start Kafka server" -ForegroundColor White
+    Write-Host "  cp-kafka-stop  : Stop Kafka server" -ForegroundColor White
+    Write-Host "  redis-server   : Start Redis server (port 6379)" -ForegroundColor White
+    Write-Host "  redis-cli      : Access Redis CLI" -ForegroundColor White
+    Write-Host "  refresh        : Reload PowerShell profile" -ForegroundColor White
+    Write-Host "  aliases        : Show this list of custom aliases" -ForegroundColor White
+    Write-Host "  open-zsh       : Open PowerShell profile for editing" -ForegroundColor White
+    Write-Host ""
+}
+
+# Open PowerShell profile in default editor
+function open-zsh {
+    Write-Host "Opening PowerShell profile..." -ForegroundColor Green
+    code $PROFILE
+}
+
+# ===========================
+# Welcome Message
+# ===========================
+
+Write-Host "PowerShell profile loaded successfully!" -ForegroundColor Green
+Write-Host "Available custom aliases:" -ForegroundColor Cyan
+Write-Host "  - grep           : Alias for Select-String" -ForegroundColor White
+Write-Host "  - cp-kafka-start : Start Kafka server" -ForegroundColor White
+Write-Host "  - cp-kafka-stop  : Stop Kafka server" -ForegroundColor White
+Write-Host "  - redis-server   : Start Redis server (port 6379)" -ForegroundColor White
+Write-Host "  - redis-cli      : Access Redis CLI" -ForegroundColor White
+Write-Host "  - refresh        : Reload PowerShell profile" -ForegroundColor White
+Write-Host ""
